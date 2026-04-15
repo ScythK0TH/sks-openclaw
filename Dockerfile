@@ -164,6 +164,11 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
 
 RUN chown node:node /app
 
+# Allow the node user to install global npm packages (skills, plugins, etc.)
+# These directories are created as root during the base image build
+RUN mkdir -p /usr/local/lib/node_modules /usr/local/bin && \
+    chown -R node:node /usr/local/lib/node_modules /usr/local/bin
+
 COPY --from=runtime-assets --chown=node:node /app/dist ./dist
 COPY --from=runtime-assets --chown=node:node /app/node_modules ./node_modules
 COPY --from=runtime-assets --chown=node:node /app/package.json .
